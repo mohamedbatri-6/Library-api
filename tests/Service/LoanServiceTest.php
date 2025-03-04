@@ -48,8 +48,7 @@ class LoanServiceTest extends TestCase
         $book = new Book();
         $book->setTitle($title);
         
-        $user = new User(); // Correction ici - était Book précédemment
-        // Puisque setId n'existe pas, utiliser un mock
+        $user = new User(); 
         $user = $this->createMock(User::class);
         $user->method('getId')->willReturn($userId);
         $user->method('canBorrowBooks')->willReturn(true);
@@ -74,10 +73,8 @@ class LoanServiceTest extends TestCase
             ->expects($this->once())
             ->method('save');
         
-        // Act
         $result = $this->loanService->borrowBook($title, $userId);
         
-        // Assert
         $this->assertInstanceOf(Loan::class, $result);
     }
 
@@ -100,7 +97,6 @@ class LoanServiceTest extends TestCase
 
     public function testBorrowBookThrowsExceptionWhenUserNotFound()
     {
-        // Arrange
         $title = "Le Petit Prince";
         $userId = 999;
         
@@ -126,7 +122,6 @@ class LoanServiceTest extends TestCase
 
     public function testBorrowBookThrowsExceptionWhenBookAlreadyBorrowed()
     {
-        // Arrange
         $title = "Le Petit Prince";
         $userId = 1;
         
@@ -150,14 +145,12 @@ class LoanServiceTest extends TestCase
             ->with($userId)
             ->willReturn($user);
         
-        // Assert & Act
         $this->expectException(BookAlreadyBorrowedException::class);
         $this->loanService->borrowBook($title, $userId);
     }
 
     public function testBorrowBookThrowsExceptionWhenUserHasTooManyBooks()
     {
-        // Arrange
         $title = "Le Petit Prince";
         $userId = 1;
         
@@ -180,7 +173,6 @@ class LoanServiceTest extends TestCase
             ->with($userId)
             ->willReturn($user);
         
-        // Assert & Act
         $this->expectException(TooManyBooksException::class);
         $this->loanService->borrowBook($title, $userId);
     }
